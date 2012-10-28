@@ -8,9 +8,13 @@ class MoviesController < ApplicationController
 
   def index
   	@all_ratings = Movie.get_all_ratings
-  	
+ 	
   	if !params.has_key? "ratings"
-  		@checked_ratings = @all_ratings
+  		if !session.has_key? "ratings"
+	  		@checked_ratings = @all_ratings
+	  	else
+	  		@checked_ratings = session[:ratings]
+	  	end
   	else
   		@checked_ratings = params[:ratings].keys
   	end
@@ -36,6 +40,8 @@ class MoviesController < ApplicationController
 		end
 			
 		flash[:ratings] = @checked_ratings
+		session[:ratings] = @checked_ratings
+		session[:sort_by] = sort_by
   end
 	
   def new
